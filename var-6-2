@@ -1,0 +1,58 @@
+import java.io.*;
+import java.util.Scanner;
+
+public class var-6-2 {
+    public static void main(String[] args) throws IOException{
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Какое кол-во гор хотите записать в файл?");
+        int count = sc.nextInt();
+        sc.nextLine();
+        RandomAccessFile raf1 = null;
+        RandomAccessFile raf2 = null;
+        String name, place;
+        int height;
+        try {
+            File f1 = new File("mount.txt");
+            File f2 = new File("result.txt");
+            if (f1.exists()) f1.delete();
+            f1.createNewFile();
+            if (f2.exists()) f2.delete();
+            f2.createNewFile();
+            raf1 = new RandomAccessFile(f1,"rw");
+            raf2 = new RandomAccessFile(f2, "rw");
+            for (int i = 0; i < count; i++) {
+                System.out.println("Введите название");
+                name = sc.nextLine();
+                raf1.writeUTF(name);
+                for (int j = 0; j < 20 - name.length(); j++) raf1.writeByte(1);
+                System.out.println("Введите место распололжения");
+                place = sc.nextLine();
+                raf1.writeUTF(place);
+                for (int j = 0; j < 20 - place.length(); j++) raf1.writeByte(1);
+                System.out.println("Введите высоту");
+                height = sc.nextInt();
+                raf1.writeInt(height);
+                sc.nextLine();
+                if (place.equals("Африка")) {
+                    raf2.writeUTF(name);
+                    raf2.writeUTF(place);
+                    raf2.writeInt(height);
+                }
+            }
+            String namer, placer;
+            int heightr;
+            for (int i = 0; i < count; i++) {
+                namer = raf2.readLine();
+                for (int j = 0; j < 20 - namer.length(); j++) raf1.writeByte(1);
+                placer = raf2.readLine();
+                for (int j = 0; j < 20 - placer.length(); j++) raf1.writeByte(1);
+                heightr = raf2.readInt();
+                System.out.println("name " + namer + "place " + "height " + heightr);
+            }
+        } catch (IOException ie) {
+            ie.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
